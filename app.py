@@ -51,7 +51,7 @@ st.write(
 # API KEY
 # =========================================================
 
-
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 
 # =========================================================
@@ -200,6 +200,7 @@ Answer:
 
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
+        google_api_key=api_key,
         temperature=0
     )
 
