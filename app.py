@@ -41,6 +41,7 @@ st.set_page_config(
 # =========================================================
 
 st.title("🎥 YouTube AI Assistant")
+
 st.write(
     "Ask questions about a YouTube video using its transcript."
 )
@@ -107,7 +108,9 @@ def get_transcript(video_id):
 
     except Exception as e:
 
-        st.error(f"Transcript error: {e}")
+        st.error(
+            f"Transcript error: {e}"
+        )
 
         return None
 
@@ -139,10 +142,14 @@ def ask_question(question, vectorstore):
 
     retriever = vectorstore.as_retriever(
         search_type="similarity",
-        search_kwargs={"k": 4}
+        search_kwargs={
+            "k": 4
+        }
     )
 
-    docs = retriever.invoke(question)
+    docs = retriever.invoke(
+        question
+    )
 
     context = "\n\n".join(
         doc.page_content
@@ -187,6 +194,10 @@ Answer:
         question=question
     )
 
+    # =====================================================
+    # GEMINI
+    # =====================================================
+
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         temperature=0
@@ -204,9 +215,12 @@ Answer:
 # =========================================================
 
 if "vectorstore" not in st.session_state:
+
     st.session_state.vectorstore = None
 
+
 if "video_id" not in st.session_state:
+
     st.session_state.video_id = None
 
 
@@ -214,7 +228,9 @@ if "video_id" not in st.session_state:
 # YOUTUBE URL
 # =========================================================
 
-st.subheader("1️⃣ Enter YouTube Video")
+st.subheader(
+    "1️⃣ Enter YouTube Video"
+)
 
 youtube_url = st.text_input(
     "YouTube URL",
@@ -227,7 +243,6 @@ youtube_url = st.text_input(
 # =========================================================
 
 if st.button("🚀 Process Video"):
-
 
     if not youtube_url:
 
@@ -249,6 +264,10 @@ if st.button("🚀 Process Video"):
 
         else:
 
+            # ---------------------------------------------
+            # GET TRANSCRIPT
+            # ---------------------------------------------
+
             with st.spinner(
                 "Fetching video transcript..."
             ):
@@ -264,6 +283,10 @@ if st.button("🚀 Process Video"):
                 )
 
             else:
+
+                # -----------------------------------------
+                # CREATE VECTOR DATABASE
+                # -----------------------------------------
 
                 with st.spinner(
                     "Creating vector database..."
@@ -285,6 +308,10 @@ if st.button("🚀 Process Video"):
                     "Video processed successfully! 🎉"
                 )
 
+                # -----------------------------------------
+                # SHOW VIDEO
+                # -----------------------------------------
+
                 st.video(
                     f"https://www.youtube.com/watch?v={video_id}"
                 )
@@ -298,7 +325,9 @@ if st.session_state.vectorstore:
 
     st.divider()
 
-    st.subheader("2️⃣ Ask Questions")
+    st.subheader(
+        "2️⃣ Ask Questions"
+    )
 
     question = st.text_input(
         "Ask something about the video",
@@ -324,9 +353,13 @@ if st.session_state.vectorstore:
                     st.session_state.vectorstore
                 )
 
-            st.subheader("🤖 Answer")
+            st.subheader(
+                "🤖 Answer"
+            )
 
-            st.write(answer)
+            st.write(
+                answer
+            )
 
 
 # =========================================================
